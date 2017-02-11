@@ -8,6 +8,7 @@ package at.yawk.dbus.databind.binder;
 
 import at.yawk.dbus.protocol.object.BasicObject;
 import at.yawk.dbus.protocol.object.DbusObject;
+import at.yawk.dbus.protocol.object.ObjectPathObject;
 import at.yawk.dbus.protocol.object.VariantObject;
 import at.yawk.dbus.protocol.type.BasicType;
 import at.yawk.dbus.protocol.type.TypeDefinition;
@@ -37,16 +38,24 @@ public class PrimitiveBinderFactory implements BinderFactory {
                 BasicType.BYTE, DbusObject::byteValue, BasicObject::createByte);
         Binder<Short> shortBinder = Binder.of(
                 BasicType.INT16, DbusObject::shortValue, BasicObject::createInt16);
+        Binder<Short> unsignedShortBinder = Binder.of(
+                BasicType.UINT16, DbusObject::shortValue, BasicObject::createUint16);
         Binder<Integer> integerBinder = Binder.of(
                 BasicType.INT32, DbusObject::intValue, BasicObject::createInt32);
+        Binder<Integer> unsignedIntegerBinder = Binder.of(
+                BasicType.UINT32, DbusObject::intValue, BasicObject::createUint32);
         Binder<Long> longBinder = Binder.of(
                 BasicType.INT64, DbusObject::longValue, BasicObject::createInt64);
+        Binder<Long> unsignedLongBinder = Binder.of(
+                BasicType.UINT64, DbusObject::longValue, BasicObject::createUint64);
         Binder<Float> floatBinder = Binder.<Float>of(
                 BasicType.DOUBLE, obj -> (float) obj.doubleValue(), BasicObject::createDouble);
         Binder<Double> doubleBinder = Binder.of(
                 BasicType.DOUBLE, DbusObject::doubleValue, BasicObject::createDouble);
         Binder<DbusObject> variantBinder = Binder.of(
                 BasicType.VARIANT, DbusObject::getValue, VariantObject::create);
+        Binder<String> objectPathBinder = Binder.of(
+                BasicType.OBJECT_PATH, DbusObject::stringValue, ObjectPathObject::create);
 
         typeBinders.put(String.class, stringBinder);
         typeBinders.put(boolean.class, booleanBinder);
@@ -70,10 +79,14 @@ public class PrimitiveBinderFactory implements BinderFactory {
                 booleanBinder,
                 byteBinder,
                 shortBinder,
+                unsignedShortBinder,
                 integerBinder,
+                unsignedIntegerBinder,
                 longBinder,
+                unsignedLongBinder,
                 floatBinder,
-                doubleBinder
+                doubleBinder,
+                objectPathBinder
         }) {
             defaultBinders.put(binder.getType(), binder);
         }
