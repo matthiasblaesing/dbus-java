@@ -239,7 +239,7 @@ class CallSiteBuilder implements Request {
                 throw new IllegalArgumentException("Unsupported listener type " + raw.getName());
             }
 
-            if (method.getReturnType() != void.class) {
+            if (method.getReturnType() != void.class && (! Runnable.class.isAssignableFrom(method.getReturnType()))) {
                 throw new IllegalArgumentException("Unsupported return type on listener method " + method);
             }
 
@@ -351,8 +351,7 @@ class CallSiteBuilder implements Request {
             //rule.setDestination(destination);
             if (member != null) rule.setMember(member);
             rule.setEavesdrop(eavesdrop);
-            executor.listen(bus, rule, listener);
-            return null;
+            return executor.listen(bus, rule, listener);
         } else {
             assert listener == null;
             Response response = timeout > 0 ?
